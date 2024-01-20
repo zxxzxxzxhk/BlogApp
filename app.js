@@ -19,7 +19,7 @@ mongoose
 
 app.use(cors())
 app.get('/api/version', async (request, response) => {
-  response.json('version3')
+  response.json('version2')
 } )
 app.get('/health', (req, res) => {
   res.send('ok')

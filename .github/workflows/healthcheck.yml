@@ -11,7 +11,7 @@ jobs:
         uses: jtalk/url-health-check-action@v3
         if: github.event.schedule != '30 5 * * 1,3'
         with:
-          url: https://pokedex-4mm6.onrender.com/|https://pokeapi.co/api/v2/pokemon/?limit=50
+          url: https://blogapp-ix7a.onrender.com
           follow-redirect: false 
           max-attempts: 2
           retry-delay: 5s 
