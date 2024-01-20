@@ -19,7 +19,7 @@ mongoose
 
 app.use(cors())
 app.get('/api/version', async (request, response) => {
-  response.json('version1')
+  response.json('version2')
 } )
 app.use(express.static('dist'))
 app.use(express.json())
