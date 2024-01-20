@@ -21,6 +21,9 @@ app.use(cors())
 app.get('/api/version', async (request, response) => {
   response.json('version2')
 } )
+app.get('/health', (req, res) => {
+  res.send('ok')
+})
 app.use(express.static('dist'))
 app.use(express.json())
 app.use(middleware.requestLogger)
