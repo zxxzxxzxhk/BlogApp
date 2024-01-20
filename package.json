@@ -1,0 +1,38 @@
+{
+  "scripts": {
+    "start": "cross-env NODE_ENV=production node index.js",
+    "dev": "cross-env NODE_ENV=development nodemon index.js",
+    "testdev": "cross-env NODE_ENV=test nodemon index.js",
+    "test": "cross-env NODE_ENV=test jest --verbose --runInBand",
+    "starttest": "cross-env NODE_ENV=test node index.js",
+    "lint": "eslint **/*.{js,jsx}",
+    "cypress:open": "cypress open",
+    "test:e2e" : "cypress run --e2e"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "eslint-plugin-jest": "^27.6.3",
+    "express": "^4.18.2",
+    "express-async-errors": "^3.1.1",
+    "jsonwebtoken": "^9.0.2",
+    "lodash": "^4.17.21",
+    "mongodb": "^6.3.0",
+    "mongoose": "^7.6.5",
+    "mongoose-unique-validator": "^4.0.0",
+    "node": "^21.2.0",
+    "nodemon": "^3.0.1"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "cypress": "^13.6.3",
+    "eslint": "^8.56.0",
+    "eslint-plugin-react": "^7.33.2",
+    "jest": "^29.7.0",
+    "supertest": "^6.3.3"
+  },
+  "jest": {
+    "testEnvironment": "node"
+  }
+}

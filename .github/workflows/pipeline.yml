@@ -1,0 +1,71 @@
+name: Deployment pipeline
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches: [master]
+    types: [opened, synchronize]
+
+jobs:
+  simple_deployment_pipeline:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install dependencies
+        run: npm install
+      - name: Check style
+        run: npm run lint
+      - name: Check test
+        run: npm run test
+      - name: e2e tests
+        uses: cypress-io/github-action@v5
+        with:
+          command: npm run test:e2e
+          start: npm run start
+          wait-on: http://localhost:3001
+      - name: Trigger deployment
+        if: ${{ github.event_name == 'push' && !contains(toJson(github.event.commits.message), '#skip') }}
+        env:
+          deploy_url: ${{ secrets.RENDER_DEPLOY }}
+        run: |
+          curl "$deploy_url"
+      - name: Test Success
+        uses: rjstone/discord-webhook-notify@v1
+        if: ${{ github.event_name == 'push' && success()}}
+        with:
+          severity: info
+          username: DN
+          color: "#ff00aa"
+          avatarUrl: https://github.githubassets.com/images/modules/logos_page/Octocat.png
+          details: Depoly is successed.
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+      - name: Test Failure
+        uses: rjstone/discord-webhook-notify@v1
+        if: ${{ github.event_name == 'push' && failure() }}
+        with:
+          severity: error
+          username: DN
+          color: "#ff00aa"
+          avatarUrl: https://github.githubassets.com/images/modules/logos_page/Octocat.png
+          details: Depoly failed.
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+
+  tag_release:
+    needs: [simple_deployment_pipeline]
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Bump version and push tag
+        if: ${{ github.event_name == 'push' && !contains(toJson(github.event.commits.*.message), '#skip') }}
+        uses: anothrNick/github-tag-action@8c8163ef62cf9c4677c8e800f36270af27930f42
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEFAULT_BUMP: patch
